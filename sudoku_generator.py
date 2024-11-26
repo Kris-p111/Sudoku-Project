@@ -1,11 +1,5 @@
 import math,random
 
-"""
-This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
-https://www.geeksforgeeks.org/program-sudoku-generator/
-
-"""
-
 class SudokuGenerator:
     '''
 	create a sudoku board - initialize class variables and set up the 2D board
@@ -84,7 +78,7 @@ class SudokuGenerator:
     '''
     def valid_in_box(self, row_start, col_start, num):
         pass
-    
+
     '''
     Determines if it is valid to enter num at (row, col) in the board
     This is done by checking that num is unused in the appropriate, row, column, and box
@@ -96,7 +90,21 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def is_valid(self, row, col, num):
-        pass
+        if num in self.board[row]:
+            return False
+
+        for i in range(9):
+            if self.board[i][col] == num:
+                return False
+
+        box_start_row = row - row % 3
+        box_start_col = col - col % 3
+        for i in range(box_start_row, box_start_row + 3):
+            for j in range(box_start_col, box_start_col + 3):
+                if self.board[i][j] == num:
+                    return False
+
+        return True
 
     '''
     Fills the specified 3x3 box with values
@@ -109,7 +117,15 @@ class SudokuGenerator:
 	Return: None
     '''
     def fill_box(self, row_start, col_start):
-        pass
+        from random import shuffle
+        nums = list(range(1, 10))
+        shuffle(nums)
+        idx = 0
+        for i in range(row_start, row_start + 3):
+            for j in range(col_start, col_start + 3):
+                self.board[i][j] = nums[idx]
+                idx += 1
+
     
     '''
     Fills the three boxes along the main diagonal of the board
@@ -119,7 +135,8 @@ class SudokuGenerator:
 	Return: None
     '''
     def fill_diagonal(self):
-        pass
+        for i in range(0, 9, 3):
+            self.fill_box(i, i)
 
     '''
     DO NOT CHANGE
@@ -185,7 +202,16 @@ class SudokuGenerator:
 	Return: None
     '''
     def remove_cells(self):
-        pass
+        from random import randint
+
+        num_to_remove = 30
+        count = 0
+        while count < num_to_remove:
+            row = randint(0, 8)
+            col = randint(0, 8)
+            if self.board[row][col] != 0:  # Only remove if the cell is not already empty
+                self.board[row][col] = 0
+                count += 1
 
 '''
 DO NOT CHANGE
