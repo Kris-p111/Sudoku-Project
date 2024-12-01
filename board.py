@@ -4,23 +4,20 @@ from cell import Cell
 
 
 class Board:
-    def __init__(self, width, height, screen, difficulty, sudoku_board):
-        self.width = width
-        self.height = height
+    def __init__(self, width, height, screen, difficulty):
+        self.width = 750
+        self.height = 900
         self.screen = screen
         self.difficulty = difficulty
-
-        # two sets of board to compare user answer with the solution
-        self.board = sudoku_board
-        # self.board = copy.deepcopy(sudoku_board)
-
-        self.board_rows = len(self.board)  # number of rows
-        self.board_cols = len(self.board[0])  # number of columns
-
-        # Create cells based on sudoku_board values
-        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
-                       for col in range(self.board_cols)]
-                      for row in range(self.board_rows)]
+        self.board_rows = 4
+        self.board_cols = 3
+        self.board_line_width = 5
+        self.cell_size = 82
+        difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
+        if self.difficulty in difficulty_levels:
+            self.empty_cells = difficulty_levels[self.difficulty]
+        else:
+            raise ValueError("Invalid difficulty level")
 
     def draw(self):
         # Calculate the width and height of the board
@@ -88,3 +85,73 @@ class Board:
                     if self.board[i][j] == 0:
                         self.cells[i][j].sketched_value = 0
                         self.cells[i][j].value = 0
+
+    def sketch(self, value):
+        # screen = pygame.display.set_mode((640, 512))
+        self.value = value
+        selected_cell = self.select()
+        sketched_val = str(self.value)
+        font = pygame.font.SysFont('Times New Roman', 100)
+        number_print = font.render(sketched_val, True, 'Black')
+        self.screen.blit(number_print, (selected_cell[0], selected_cell[1]))
+        pygame.display.update()
+
+    def place_number(self, value):
+        self.value = value
+        sketched_val = str(self.value)
+        selected_cell = self.select()
+        x = selected_cell[0] * 82
+        y = selected_cell[1] * 82
+        font = pygame.font.SysFont('Times New Roman', 50)
+        number_print = font.render(sketched_val, True, 'Black')
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.screen.blit(number_print, (x, y))
+
+    def reset_to_original(self):
+        super().__init__()
+        self.board = self.original
+
+    def is_full(self):
+        for row in board:
+            for square in row:
+                if square == '':
+                    return False
+        return True
+
+    def update_board(self):
+        for row in board:
+            for col in board:
+                font = pygame.font.SysFont('Times New Roman', 50)
+                number_print = font.render(str(square), True, 'Black')
+                x = col * 82
+                y = row * 82
+                self.screen.blit(number_print, (x, y))
+        pygame.display.update()
+
+    def find_empty(self):
+        # loop through cells and find empty, then return row and col as tuple
+        for row in board:
+            for col in board:
+                if board[row, col] == '0':
+                    return tuple(row, col)
+
+    def check_board(self):
+        def valid(row, column, box):
+            return sorted(row, column, box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+        for row in self.board_rows:
+            if not valid(row):
+                return False
+        for col in self.board_cols:
+            if not valid(col):
+                return False
+        for box_row in range(0, 9, 3):
+            for box_col in range(0, 9, 3):
+                box = [self.board[row][col]
+                       for row in range(box_row, box_row + 3)
+                       for col in range(box_col, box_col + 3)]
+                if not valid(box):
+                    return False
+        return True
