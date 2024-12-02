@@ -9,8 +9,8 @@ class Board:
         self.height = 900
         self.screen = screen
         self.difficulty = difficulty
-        self.board_rows = 4
-        self.board_cols = 3
+        self.board_rows = 9
+        self.board_cols = 9
         self.board_line_width = 5
         self.cell_size = 82
         difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
@@ -18,6 +18,8 @@ class Board:
             self.empty_cells = difficulty_levels[self.difficulty]
         else:
             raise ValueError("Invalid difficulty level")
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
+        self.original = [row[:] for row in self.board]
 
     def draw(self):
         # Calculate the width and height of the board
@@ -88,11 +90,10 @@ class Board:
 
     def sketch(self, value):
         # screen = pygame.display.set_mode((640, 512))
-        self.value = value
         selected_cell = self.select()
-        sketched_val = str(self.value)
+        sketched_val = str(value)
         font = pygame.font.SysFont('Times New Roman', 100)
-        number_print = font.render(sketched_val, True, 'Black')
+        number_print = font.render(sketched_val, True, 'Grey')
         self.screen.blit(number_print, (selected_cell[0], selected_cell[1]))
         pygame.display.update()
 
@@ -114,17 +115,17 @@ class Board:
         self.board = self.original
 
     def is_full(self):
-        for row in board:
+        for row in self.board:
             for square in row:
                 if square == '':
                     return False
         return True
 
     def update_board(self):
-        for row in board:
-            for col in board:
+        for row in self.board:
+            for col in self.board:
                 font = pygame.font.SysFont('Times New Roman', 50)
-                number_print = font.render(str(square), True, 'Black')
+                number_print = font.render(str(self.value), True, 'Black')
                 x = col * 82
                 y = row * 82
                 self.screen.blit(number_print, (x, y))
@@ -132,10 +133,11 @@ class Board:
 
     def find_empty(self):
         # loop through cells and find empty, then return row and col as tuple
-        for row in board:
-            for col in board:
-                if board[row, col] == '0':
-                    return tuple(row, col)
+        for row in self.board:
+            for col in self.board:
+                if self.board[row][col] == '0':
+                    tup = (row, col)
+                    return tup
 
     def check_board(self):
         def valid(row, column, box):

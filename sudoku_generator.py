@@ -4,16 +4,15 @@ class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
         self.removed_cells = removed_cells
-        self.board = [[0 for _ in range(row_length)]
-        #for _ in range(row_length]:
+        self.board = []
 
     def get_board(self):
-            return self.board
+        return self.board
 
     def print_board(self):
         for row in self.board:
             print(" ".join(str(cell)
-            if cell != 0 else "." for cell in row))
+            if cell != 0 else "0" for cell in row))
 
     def valid_in_row(self, row, num):
         return num not in self.board[row]
