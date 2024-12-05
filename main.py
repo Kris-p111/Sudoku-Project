@@ -203,13 +203,54 @@ def main():
                     for n in range(51):
                         pos = rand_position()
                         num = rand_num()
-                        # if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         for r in range(0, 750, 82):
                             for c in range(0, 750, 82):
                                 position = (r, c)
                                 # if position.collidepoint(event.pos):
                                     # draw initial numbers
                                 board.draw()
+                        if not board.is_full():
+                            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                                # we need the coordinates of the click
+                                x, y = board.click
+                                board.select(x,y)
+                                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                                    board.sketch(1)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                                    board.sketch(2)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                                    board.sketch(3)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_4:
+                                    board.sketch(4)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_5:
+                                    board.sketch(5)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_6:
+                                    board.sketch(6)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_7:
+                                    board.sketch(7)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_8:
+                                    board.sketch(8)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_9:
+                                    board.sketch(9)
+                                    board.draw()
+                                else:
+                                    error_message('Invalid input', screen)
+                                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                                    #board.place_number()
+                                    #parameter should be the selected cell's sketched value
+                                    #board.draw()
+                        else:
+                            draw_game_over(screen, board.check_board())
+
+
                         def valid(row, column, box):
                             return sorted(row, column, box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
                         for box_row in range(0, 9, 3):
@@ -235,7 +276,48 @@ def main():
                                 # if position.collidepoint(event.pos):
                                     # draw initial numbers
                                 board.draw()
-                        def valid(row, column, box):
+                        if not board.is_full():
+                            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                                # we need the coordinates of the click
+                                x, y = board.click
+                                board.select(x, y)
+                                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                                    board.sketch(1)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                                    board.sketch(2)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                                    board.sketch(3)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_4:
+                                    board.sketch(4)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_5:
+                                    board.sketch(5)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_6:
+                                    board.sketch(6)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_7:
+                                    board.sketch(7)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_8:
+                                    board.sketch(8)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_9:
+                                    board.sketch(9)
+                                    board.draw()
+                                else:
+                                    error_message('Invalid input', screen)
+                                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                            # board.place_number()
+                            # parameter should be the selected cell's sketched value
+                            # board.draw()
+                        else:
+                            draw_game_over(screen, board.check_board())
+
+                    def valid(row, column, box):
                             return sorted(row, column, box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
                         for box_row in range(0, 9, 3):
                             for box_col in range(0, 9, 3):
@@ -260,6 +342,47 @@ def main():
                                 # if position.collidepoint(event.pos):
                                     # draw initial numbers
                                 board.draw()
+                        if not board.is_full():
+                            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                                # we need the coordinates of the click
+                                x, y = board.click
+                                board.select(x, y)
+                                if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                                    board.sketch(1)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                                    board.sketch(2)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                                    board.sketch(3)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_4:
+                                    board.sketch(4)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_5:
+                                    board.sketch(5)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_6:
+                                    board.sketch(6)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_7:
+                                    board.sketch(7)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_8:
+                                    board.sketch(8)
+                                    board.draw()
+                                elif event.type == pygame.KEYDOWN and event.key == pygame.K_9:
+                                    board.sketch(9)
+                                    board.draw()
+                                else:
+                                    error_message('Invalid input', screen)
+                                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                            # board.place_number()
+                            # parameter should be the selected cell's sketched value
+                            # board.draw()
+                        else:
+                            draw_game_over(screen, board.check_board())
+
                         def valid(row, column, box):
                             return sorted(row, column, box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
 

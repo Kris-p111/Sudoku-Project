@@ -26,8 +26,8 @@ class SudokuGenerator:
     def valid_in_box(self, row_start, col_start, num):
         for row in range(row_start, row_start + 3):
             for col in range(col_start, col_start + 3):
-                if self.board[row][col] == num:                                                 return False
-                    return True
+                if self.board[row][col] == num:
+                    return False
     def is_valid(self, row, col, num):
         if num in self.board[row]:
             return False
