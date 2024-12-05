@@ -13,6 +13,9 @@ class Board:
         self.board_cols = 9
         self.board_line_width = 5
         self.cell_size = 82
+        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
+                       for col in range(self.board_cols)]
+                      for row in range(self.board_rows)]
         difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
         if self.difficulty in difficulty_levels:
             self.empty_cells = difficulty_levels[self.difficulty]
@@ -89,26 +92,34 @@ class Board:
                         self.cells[i][j].value = 0
 
     def sketch(self, value):
-        # screen = pygame.display.set_mode((640, 512))
-        selected_cell = self.select()
-        sketched_val = str(value)
-        font = pygame.font.SysFont('Times New Roman', 100)
-        number_print = font.render(sketched_val, True, 'Grey')
-        self.screen.blit(number_print, (selected_cell[0], selected_cell[1]))
-        pygame.display.update()
+        for row in range(self.board_rows):
+            for col in range(self.board_cols):
+                if self.cells[col][row].selected:
+                    if self.board[col][row] == 0:
+                        self.cells[col][row].set_sketched_value(value)
+        # sketched_val = str(value)
+        # font = pygame.font.SysFont('Times New Roman', 100)
+        # number_print = font.render(sketched_val, True, 'Grey')
+        # self.screen.blit(number_print, (selected_cell[0], selected_cell[1]))
+        # pygame.display.update()
 
     def place_number(self, value):
         self.value = value
         sketched_val = str(self.value)
-        selected_cell = self.select()
-        x = selected_cell[0] * 82
-        y = selected_cell[1] * 82
-        font = pygame.font.SysFont('Times New Roman', 50)
-        number_print = font.render(sketched_val, True, 'Black')
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.screen.blit(number_print, (x, y))
+        for row in range(self.board_rows):
+            for col in range(self.board_cols):
+                if self.cells[col][row].selected:
+                    if self.board[col][row] == 0:
+                        self.cells[col][row].set_sketched_value(0)
+                        self.cells[col][row].set_cell_value(value)
+        # x = selected_cell[0] * 82
+        # y = selected_cell[1] * 82
+        # font = pygame.font.SysFont('Times New Roman', 50)
+        # number_print = font.render(sketched_val, True, 'Black')
+        # for event in pygame.event.get():
+        #     if event.type == pygame.KEYDOWN:
+        #         if event.key == pygame.K_RETURN:
+        #             self.screen.blit(number_print, (x, y))
 
     def reset_to_original(self):
         super().__init__()
