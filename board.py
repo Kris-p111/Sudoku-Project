@@ -25,6 +25,7 @@ class Board:
         self.cells = [[Cell(self.board[row][col], row, col, self.screen)
                 for col in range(self.board_cols)]
                 for row in range(self.board_rows)]
+        self.selected = (0, 0)
     def draw(self):
         # Calculate the width and height of the board
         BOARD_WIDTH = 9 * CELL_SIZE
@@ -32,7 +33,7 @@ class Board:
 
         # Calculate the starting position
         board_start_x = (WIDTH - BOARD_WIDTH) // 2
-        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70  # move board up ~ 70 px
+        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 5 # move board up ~ 70 px
 
         # Draw the cells
         for row in self.cells:
@@ -72,7 +73,7 @@ class Board:
 
         # Calculate the starting position
         board_start_x = (WIDTH - BOARD_WIDTH) // 2
-        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70  # move board up ~ 70 px
+        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 -5 # move board up ~ 70 px
 
         # if coordinates inside the board (which calculated by adding board's width and height to the starting points)
         if board_start_x <= x < board_start_x + BOARD_WIDTH and board_start_y <= y < board_start_y + BOARD_HEIGHT:
@@ -90,7 +91,7 @@ class Board:
                     # check if it's an empty cell in the original board
                     if self.board[i][j] == 0:
                         self.cells[i][j].sketched_value = 0
-                        self.cells[i][j].value = 0
+                        self.cells[i][j].cell_value = 0
 
     def sketch(self, value):
         for row in range(self.board_rows):
@@ -105,14 +106,14 @@ class Board:
         # pygame.display.update()
 
     def place_number(self, value):
-        self.value = value
+        #self.value = value
         #sketched_val = str(self.value)
         for row in range(self.board_rows):
             for col in range(self.board_cols):
                 if self.cells[col][row].selected:
                     if self.board[col][row] == 0:
-                        self.cells[col][row].set_sketched_value(0)
                         self.cells[col][row].set_cell_value(value)
+                        self.cells[col][row].set_sketched_value(0)
                         self.board[col][row] = value  # Update the board
                         self.draw()  # Refresh the board display
         # x = selected_cell[0] * 82
