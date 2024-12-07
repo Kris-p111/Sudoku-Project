@@ -106,13 +106,15 @@ class Board:
 
     def place_number(self, value):
         self.value = value
-        sketched_val = str(self.value)
+        #sketched_val = str(self.value)
         for row in range(self.board_rows):
             for col in range(self.board_cols):
                 if self.cells[col][row].selected:
                     if self.board[col][row] == 0:
                         self.cells[col][row].set_sketched_value(0)
                         self.cells[col][row].set_cell_value(value)
+                        self.board[col][row] = value  # Update the board
+                        self.draw()  # Refresh the board display
         # x = selected_cell[0] * 82
         # y = selected_cell[1] * 82
         # font = pygame.font.SysFont('Times New Roman', 50)

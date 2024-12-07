@@ -76,10 +76,8 @@ def generate_initial_board(num_cells):
             if is_valid_move(initial_board.board, row, col, num):  # Check if it's valid
                 initial_board.board[row][col] = num
                 initial_board.place_number(num)
-                initial_board.draw()
-                pygame.display.update()
                 filled_cells += 1
-
+            pygame.display.update()
     return initial_board
 
 def draw_other_buttons(screen):
@@ -216,19 +214,51 @@ def main():
                 if clicked_cell:
                     row, col = clicked_cell
                     board.select(row, col)
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    board.select(row, col-1)
-                elif event.key == pygame.K_RIGHT:
-                    board.select(row, col+1)
-                elif event.key == pygame.K_UP:
-                    board.select(row-1, col)
-                elif event.key == pygame.K_DOWN:
-                    board.select(row+1, col)
-                elif pygame.K_1 <= event.key <= pygame.K_9:
-                    board.sketch(event.key - pygame.K_0)
-                elif event.key == pygame.K_RETURN:
-                    board.place_number(event.key)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                board.sketch(1)
+                board.draw()
+                if event.type == pygame.K_RETURN:
+                    board.place_number(1)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                board.sketch(2)
+                board.draw()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                board.sketch(3)
+                board.draw()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_4:
+                board.sketch(4)
+                board.draw()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_5:
+                board.sketch(5)
+                board.draw()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_6:
+                board.sketch(6)
+                board.draw()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_7:
+                board.sketch(7)
+                board.draw()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_8:
+                board.sketch(8)
+                board.draw()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_9:
+                board.sketch(9)
+                board.draw()
+            else:
+                error_message('Invalid input', screen)
+                # if pygame.K_1 <= event.key <= pygame.K_9:
+                #     board.sketch(event.key - pygame.K_0)
+                # elif event.key == pygame.K_RETURN:
+                #     board.place_number(board.sketch(event.key - pygame.K_0))
+                #row, col = 0, 0
+                # if event.key == pygame.K_LEFT and col > 0:
+                #     col -= 1
+                # elif event.key == pygame.K_RIGHT and col < 8:
+                #     col += 1
+                # elif event.key == pygame.K_UP and row > 0:
+                #     row -= 1
+                # elif event.key == pygame.K_DOWN and row < 8:
+                #     row += 1
+                # board.select(row, col)
         board.draw()
         pygame.display.flip()
 
