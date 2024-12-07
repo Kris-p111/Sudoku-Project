@@ -243,6 +243,7 @@ def main():
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_9:
                 board.sketch(9)
                 board.draw()
+
             else:
                 error_message('Invalid input', screen)
                 # if pygame.K_1 <= event.key <= pygame.K_9:
