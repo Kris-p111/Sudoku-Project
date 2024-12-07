@@ -4,7 +4,7 @@ class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
         self.removed_cells = removed_cells
-        self.board = []
+        self.board = [[0 for _ in range(row_length)] for _ in range(row_length)]
 
     def get_board(self):
         return self.board
@@ -33,8 +33,9 @@ class SudokuGenerator:
             return False
 
         for i in range(9):
-            if self.board[i][col] == num:
-                return False
+            for col in range(self.row_length):
+                if self.board[i][col] == num:
+                    return False
 
         box_start_row = row - row % 3
         box_start_col = col - col % 3
@@ -67,14 +68,14 @@ class SudokuGenerator:
             col = 0
         if row >= self.row_length and col >= self.row_length:
             return True
-        if row < self.box_length:
-            if col < self.box_length:
-                col = self.box_length
-        elif row < self.row_length - self.box_length:
-            if col == int(row // self.box_length * self.box_length):
-                col += self.box_length
+        if row < self.row_length:
+            if col < self.row_length:
+                col = self.row_length
+        elif row < self.row_length - self.row_length:
+            if col == int(row // self.row_length * self.row_length):
+                col += self.row_length
         else:
-            if col == self.row_length - self.box_length:
+            if col == self.row_length - self.row_length:
                 row += 1
                 col = 0
                 if row >= self.row_length:
@@ -90,19 +91,17 @@ class SudokuGenerator:
 
     def fill_values(self):
         self.fill_diagonal()
-        self.fill_remaining(0, self.box_length)
+        self.fill_remaining(0, self.row_length)
 
     def remove_cells(self):
-        from random import randint
-
-        num_to_remove = 30
-        count = 0
-        while count < num_to_remove:
-            row = randint(0, 8)
-            col = randint(0, 8)
-            if self.board[row][col] != 0:  # Only remove if the cell is not already empty
-                self.board[row][col] = 0
-                count += 1
+        def remove_cells(self):
+            count = 0
+            while count < self.removed_cells:
+                row = random.randint(0, 8)
+                col = random.randint(0, 8)
+                if self.board[row][col] != 0:
+                    self.board[row][col] = 0
+                    count += 1
 
 '''
 DO NOT CHANGE

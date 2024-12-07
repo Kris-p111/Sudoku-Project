@@ -5,6 +5,7 @@ from cell import Cell
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
         self.width = 750
         self.height = 900
         self.screen = pygame.display.set_mode((width, height))
@@ -13,17 +14,17 @@ class Board:
         self.board_cols = 9
         self.board_line_width = 5
         self.cell_size = 82
-        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
-                       for col in range(self.board_cols)]
-                      for row in range(self.board_rows)]
-        difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
-        if self.difficulty in difficulty_levels:
-            self.empty_cells = difficulty_levels[self.difficulty]
-        else:
-            raise ValueError("Invalid difficulty level")
-        self.board = [[0 for _ in range(9)] for _ in range(9)]
-        self.original = [row[:] for row in self.board]
 
+        # difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
+        # if self.difficulty in difficulty_levels:
+        #     self.empty_cells = difficulty_levels[self.difficulty]
+        # else:
+        #     raise ValueError("Invalid difficulty level")
+
+        self.original = [row[:] for row in self.board]
+        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
+                for col in range(self.board_cols)]
+                for row in range(self.board_rows)]
     def draw(self):
         # Calculate the width and height of the board
         BOARD_WIDTH = 9 * CELL_SIZE
@@ -126,9 +127,10 @@ class Board:
         self.board = self.original
 
     def is_full(self):
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
         for row in self.board:
-            for square in row:
-                if square == '':
+            for cell in row:
+                if cell == 0:
                     return False
         return True
 
@@ -152,12 +154,12 @@ class Board:
 
     def check_board(self):
         def valid(row, column, box):
-            return sorted(row, column, box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            return sorted(row + column + box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-        for row in self.board_rows:
+        for row in range(self.board_rows):
             if not valid(row):
                 return False
-        for col in self.board_cols:
+        for col in range(self.board_cols):
             if not valid(col):
                 return False
         for box_row in range(0, 9, 3):
