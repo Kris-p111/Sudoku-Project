@@ -229,7 +229,6 @@ def main():
                     board.sketch(event.key - pygame.K_0)
                 elif event.key == pygame.K_RETURN:
                     board.place_number(event.key)
-
         board.draw()
         pygame.display.flip()
 
