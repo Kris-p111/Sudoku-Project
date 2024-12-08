@@ -304,7 +304,7 @@ def main():
             pygame.display.update()
             draw_game_over(screen, winner)
             running = False
-        pygame.quit()
+pygame.quit()
 
 if __name__ == '__main__':
     main()
