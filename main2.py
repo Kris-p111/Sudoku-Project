@@ -1,4 +1,5 @@
 from cell import Cell
+from sudoku_generator import *
 from board import Board
 import pygame
 from constants import *
@@ -81,6 +82,9 @@ def generate_initial_board(num_cells):
     pygame.display.update()  # Refresh the screen after the loop
     return initial_board
 #print(board.place_number(board.cells[row][col].sketched_value))
+
+
+
 def draw_other_buttons(screen):
     # Initialize title font
     buttons_font = pygame.font.Font(None, 50)
@@ -201,11 +205,38 @@ def main():
     difficulty = draw_game_start(screen)
     board = Board(WIDTH, HEIGHT, screen, difficulty)
     generate_initial_board(51)
+
     #board.board = initial_board
 
-    # Main game loop
     running = True
     while running:
+        counter = 0
+        if difficulty == 30:
+            # new_board = SudokuGenerator(9, 30)
+            # sudoku_list = new_board.get_board()
+            for row in range(0,9):
+                for col in range(0,9):
+                    entry = board[col][row]
+                    if entry != 0 and counter < 31:
+                        board.draw()
+                        counter +=1
+        elif difficulty == 40:
+            for row in range(0,9):
+                for col in range(0,9):
+                    entry = board[col][row]
+                    if entry != 0 and counter < 41:
+                        board.draw()
+                        counter +=1
+        elif difficulty == 50:
+            for row in range(0,9):
+                for col in range(0,9):
+                    entry = board[col][row]
+                    if entry != 0 and counter < 51 :
+                        board.draw()
+                        counter +=1
+
+
+        # Main game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
