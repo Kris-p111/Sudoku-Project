@@ -1,5 +1,5 @@
 from cell import Cell
-from sudoku_generator import SudokuGenerator
+from sudoku_generator import *
 from board import Board
 import pygame
 from constants import *
@@ -195,16 +195,6 @@ def handle_board_events(board, screen):
     board.draw()
     return True
 
-def rand_position():
-    x = random.randrange(0, 750)
-    y = random.randrange(0, 750)
-    rand_pos = (x, y)
-    return rand_pos
-
-def rand_num():
-    number = random.randrange(1, 9)
-    return number
-
 
 def main():
     pygame.init()
@@ -215,36 +205,38 @@ def main():
     difficulty = draw_game_start(screen)
     board = Board(WIDTH, HEIGHT, screen, difficulty)
     generate_initial_board(51)
+
     #board.board = initial_board
 
     running = True
-    sudoku_list = SudokuGenerator.get_board(board)
     while running:
         counter = 0
         if difficulty == 30:
+            # new_board = SudokuGenerator(9, 30)
+            # sudoku_list = new_board.get_board()
             for row in range(0,9):
                 for col in range(0,9):
-                    entry = board[row][col]
+                    entry = board[col][row]
                     if entry != 0 and counter < 31:
                         board.draw()
                         counter +=1
         elif difficulty == 40:
             for row in range(0,9):
                 for col in range(0,9):
-                    entry = board[row][col]
+                    entry = board[col][row]
                     if entry != 0 and counter < 41:
                         board.draw()
                         counter +=1
         elif difficulty == 50:
             for row in range(0,9):
                 for col in range(0,9):
-                    entry = board[row][col]
+                    entry = board[col][row]
                     if entry != 0 and counter < 51 :
                         board.draw()
                         counter +=1
 
 
-    # Main game loop
+        # Main game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
