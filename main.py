@@ -216,6 +216,7 @@ def main():
 
 
     running = True
+    game_over = False
     while running:
         counter = 0
 
@@ -289,14 +290,21 @@ def main():
                         new_row = 0
                     board.select(new_row, selected_col)
                     selected_row = new_row
+                elif event.key == pygame.K_RETURN and board.is_full():
+                    game_over = True
         board.draw()
         pygame.display.flip()
 
-        if board.is_full():
-            draw_game_over(screen, board.check_board())
-            running = False
 
-    pygame.quit()
+        if game_over:
+            if board.check_board():
+                winner = 1
+            else:
+                winner = 0
+            pygame.display.update()
+            draw_game_over(screen, winner)
+            running = False
+        pygame.quit()
 
 if __name__ == '__main__':
     main()
