@@ -23,6 +23,14 @@ def is_valid_move(board, row, col, num):
 
     return True
 
+def generate_sudoku(size, removed):
+    sudoku = SudokuGenerator(size, removed)
+    sudoku.fill_values()
+    board = sudoku.get_board()
+    sudoku.remove_cells()
+    board = sudoku.get_board()
+    return board
+
 def draw_game_start(screen):
     # Initialize fonts
     title_font = pygame.font.Font(None, 100)
@@ -204,34 +212,34 @@ def main():
     # Select difficulty and generate the board
     difficulty = draw_game_start(screen)
     board = Board(WIDTH, HEIGHT, screen, difficulty)
-    generate_initial_board(51)
+    board = generate_initial_board(51)
 
-    #board.board = initial_board
 
     running = True
     while running:
         counter = 0
+
         if difficulty == 30:
             # new_board = SudokuGenerator(9, 30)
             # sudoku_list = new_board.get_board()
             for row in range(0,9):
                 for col in range(0,9):
-                    entry = board[col][row]
-                    if entry != 0 and counter < 31:
+                    entry = board.cells[row][col].value
+                    if entry != 0 and counter < 51:
                         board.draw()
                         counter +=1
         elif difficulty == 40:
             for row in range(0,9):
                 for col in range(0,9):
-                    entry = board[col][row]
+                    entry = board.cells[row][col].value
                     if entry != 0 and counter < 41:
                         board.draw()
                         counter +=1
         elif difficulty == 50:
             for row in range(0,9):
                 for col in range(0,9):
-                    entry = board[col][row]
-                    if entry != 0 and counter < 51 :
+                    entry = board.cells[row][col].value
+                    if entry != 0 and counter < 31 :
                         board.draw()
                         counter +=1
 
@@ -283,38 +291,7 @@ def main():
                     selected_row = new_row
         board.draw()
         pygame.display.flip()
-        #elif event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-        #     board.sketch(1)
-        #     board.draw()
-        #     if event.type == pygame.K_RETURN:
-        #         board.place_number(1)
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-        #     board.sketch(2)
-        #     board.draw()
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-        #     board.sketch(3)
-        #     board.draw()
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_4:
-        #     board.sketch(4)
-        #     board.draw()
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_5:
-        #     board.sketch(5)
-        #     board.draw()
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_6:
-        #     board.sketch(6)
-        #     board.draw()
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_7:
-        #     board.sketch(7)
-        #     board.draw()
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_8:
-        #     board.sketch(8)
-        #     board.draw()
-        # elif event.type == pygame.KEYDOWN and event.key == pygame.K_9:
-        #     board.sketch(9)
-        #     board.draw()
-        #
-        # else:
-        #     error_message('Invalid input', screen)
+
         if board.is_full():
             draw_game_over(screen, board.check_board())
             running = False
