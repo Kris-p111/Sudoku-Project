@@ -24,7 +24,7 @@ class Cell:
 
         # Calculate the starting position to center the board
         board_start_x = (WIDTH - BOARD_WIDTH) // 2
-        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 5  # move board up ~ 70 px
+        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70  # move board up ~ 70 px
 
         # Draw the cell rectangle
         cell_rect = pygame.Rect(board_start_x + self.col * CELL_SIZE, board_start_y + self.row * CELL_SIZE, CELL_SIZE,
@@ -52,3 +52,4 @@ class Cell:
                 center=((board_start_x + self.col * CELL_SIZE + CELL_SIZE // 2) - 12,
                         (board_start_y + self.row * CELL_SIZE + CELL_SIZE // 2) - 12))
             screen.blit(cell_surf, cell_rect)
+

@@ -130,18 +130,24 @@ def draw_other_buttons(screen):
     screen.blit(exit_surface, exit_rectangle)
 
     buttons = [(reset_rectangle, 'RESET'), (restart_rectangle, 'RESTART'), (exit_rectangle, 'EXIT')]
+    return buttons
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button ==1:
-                for rect, label in buttons:
-                    if rect.collidepoint(event.pos):
-                        return label
+    # while True:
+    #     for event in pygame.event.get():
+    #         if event.type == pygame.QUIT:
+    #             pygame.quit()
+    #             exit()
+    #         elif event.type == pygame.MOUSEBUTTONDOWN and event.button ==1:
+    #             for rect, label in buttons:
+    #                 if rect.collidepoint(event.pos):
+    #                     return label
 
-
+def handle_button_click(event, buttons):
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        for rect, label in buttons:
+            if rect.collidepoint(event.pos):
+                return label
+    return None
 
 def error_message(error, screen):
     message_font = pygame.font.Font(None, 30)
@@ -198,21 +204,6 @@ def draw_game_over(screen, winner):
                 return  # Exit this function to restart the main loop
 
 
-def handle_board_events(board, screen):
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            pos = event.pos
-            clicked_cell = board.click(*pos)
-            if clicked_cell:
-                board.select(*clicked_cell)
-        elif event.type == pygame.KEYDOWN:
-            if pygame.K_1 <= event.key <= pygame.K_9:
-                board.sketch(event.key - pygame.K_0)
-            elif event.key == pygame.K_RETURN:
-                board.place_number()
-    board.draw()
-    return True
-
 
 def main():
     pygame.init()
@@ -223,7 +214,8 @@ def main():
     difficulty = draw_game_start(screen)
     board = Board(WIDTH, HEIGHT, screen, difficulty)
     board = generate_initial_board(51)
-
+    screen.fill("white")
+    buttons = draw_other_buttons(screen)
 
     running = True
     game_over = False
@@ -272,9 +264,18 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 clicked_cell = board.click(*pos)
-                row, col = clicked_cell
+                other_clicked_cell = handle_button_click(event, buttons)
                 if clicked_cell:
+                    row, col = clicked_cell
                     board.select(row, col)
+                if other_clicked_cell == "RESET":
+                    board.reset_to_original()
+                elif other_clicked_cell == "RESTART":
+                    main()
+                    return
+                elif other_clicked_cell == "EXIT":
+                    running = False
+
             elif event.type == pygame.KEYDOWN:
                 selected_row, selected_col = 0, 0
                 if pygame.K_1 <= event.key <= pygame.K_9:

@@ -59,6 +59,7 @@ class Board:
                              (board_start_x + (3 * i) * CELL_SIZE, board_start_y + BOARD_HEIGHT),
                              BOARD_LINE_WIDTH)
 
+
     # Marks the cell at (row, col) in the board as the current selected cell
     def select(self, row, col):
         for i in range(self.board_rows):
