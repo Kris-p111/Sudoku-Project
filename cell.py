@@ -43,7 +43,6 @@ class Cell:
                 center=(board_start_x + self.col * CELL_SIZE + CELL_SIZE // 2,
                         board_start_y + self.row * CELL_SIZE + CELL_SIZE // 2))
             screen.blit(cell_surf, cell_rect)
-
         # Draw the value using user input
         if self.sketched_value != 0:
             cell_font = pygame.font.Font(None, 50)

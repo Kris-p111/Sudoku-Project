@@ -1,10 +1,12 @@
 import pygame
 from constants import *
 from cell import Cell
+from sudoku_generator import SudokuGenerator
 
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
         self.width = 750
         self.height = 900
         self.screen = pygame.display.set_mode((width, height))
@@ -13,17 +15,20 @@ class Board:
         self.board_cols = 9
         self.board_line_width = 5
         self.cell_size = 82
-        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
-                       for col in range(self.board_cols)]
-                      for row in range(self.board_rows)]
-        difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
-        if self.difficulty in difficulty_levels:
-            self.empty_cells = difficulty_levels[self.difficulty]
-        else:
-            raise ValueError("Invalid difficulty level")
-        self.board = [[0 for _ in range(9)] for _ in range(9)]
-        self.original = [row[:] for row in self.board]
 
+
+
+        # difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
+        # if self.difficulty in difficulty_levels:
+        #     self.empty_cells = difficulty_levels[self.difficulty]
+        # else:
+        #     raise ValueError("Invalid difficulty level")
+
+        self.original = [row[:] for row in self.board]
+        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
+                for col in range(self.board_cols)]
+                for row in range(self.board_rows)]
+        self.selected = (0, 0)
     def draw(self):
         # Calculate the width and height of the board
         BOARD_WIDTH = 9 * CELL_SIZE
@@ -31,7 +36,7 @@ class Board:
 
         # Calculate the starting position
         board_start_x = (WIDTH - BOARD_WIDTH) // 2
-        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70  # move board up ~ 70 px
+        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70 # move board up ~ 70 px
 
         # Draw the cells
         for row in self.cells:
@@ -71,7 +76,7 @@ class Board:
 
         # Calculate the starting position
         board_start_x = (WIDTH - BOARD_WIDTH) // 2
-        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70  # move board up ~ 70 px
+        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70 # move board up ~ 70 px
 
         # if coordinates inside the board (which calculated by adding board's width and height to the starting points)
         if board_start_x <= x < board_start_x + BOARD_WIDTH and board_start_y <= y < board_start_y + BOARD_HEIGHT:
@@ -104,14 +109,16 @@ class Board:
         # pygame.display.update()
 
     def place_number(self, value):
-        self.value = value
-        sketched_val = str(self.value)
+        #self.value = value
+        #sketched_val = str(self.value)
         for row in range(self.board_rows):
             for col in range(self.board_cols):
                 if self.cells[col][row].selected:
                     if self.board[col][row] == 0:
-                        self.cells[col][row].set_sketched_value(0)
                         self.cells[col][row].set_cell_value(value)
+                        self.cells[col][row].set_sketched_value(0)
+                        self.board[col][row] = value  # Update the board
+                        self.draw()  # Refresh the board display
         # x = selected_cell[0] * 82
         # y = selected_cell[1] * 82
         # font = pygame.font.SysFont('Times New Roman', 50)
@@ -126,9 +133,10 @@ class Board:
         self.board = self.original
 
     def is_full(self):
+        # self.board = [[0 for _ in range(9)] for _ in range(9)]
         for row in self.board:
-            for square in row:
-                if square == '':
+            for cell in row:
+                if cell == 0:
                     return False
         return True
 
@@ -152,12 +160,12 @@ class Board:
 
     def check_board(self):
         def valid(row, column, box):
-            return sorted(row, column, box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            return sorted(row + column + box) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-        for row in self.board_rows:
+        for row in range(self.board_rows):
             if not valid(row):
                 return False
-        for col in self.board_cols:
+        for col in range(self.board_cols):
             if not valid(col):
                 return False
         for box_row in range(0, 9, 3):
