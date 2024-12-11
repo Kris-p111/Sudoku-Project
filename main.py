@@ -1,6 +1,6 @@
 from cell import Cell
 from sudoku_generator import *
-from board import Board
+from board import *
 import pygame
 from constants import *
 import random
@@ -129,9 +129,19 @@ def draw_other_buttons(screen):
     screen.blit(restart_surface, restart_rectangle)
     screen.blit(exit_surface, exit_rectangle)
 
-    buttons = [reset_rectangle, restart_rectangle, exit_rectangle]
+    buttons = [(reset_rectangle, 'RESET'), (restart_rectangle, 'RESTART'), (exit_rectangle, 'EXIT')]
 
-    return buttons
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button ==1:
+                for rect, label in buttons:
+                    if rect.collidepoint(event.pos):
+                        return label
+
+
 
 def error_message(error, screen):
     message_font = pygame.font.Font(None, 30)
@@ -218,6 +228,16 @@ def main():
     running = True
     game_over = False
     while running:
+        # screen.fill('white')
+        # label = draw_other_buttons(screen)
+        #
+        # if label == 'RESET':
+        #     board.reset_to_original()
+        # elif label == 'RESTART':
+        #     board.clear()
+        #     continue
+        # elif label == 'QUIT':
+        #     break
         counter = 0
 
         if difficulty == 30:
@@ -308,3 +328,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

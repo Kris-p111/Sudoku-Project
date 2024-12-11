@@ -1,6 +1,7 @@
 import pygame
 from constants import *
 from cell import Cell
+from sudoku_generator import SudokuGenerator
 
 
 class Board:
@@ -14,6 +15,8 @@ class Board:
         self.board_cols = 9
         self.board_line_width = 5
         self.cell_size = 82
+
+
 
         # difficulty_levels = {"easy": 30, "medium": 40, "hard": 50}
         # if self.difficulty in difficulty_levels:
@@ -33,7 +36,7 @@ class Board:
 
         # Calculate the starting position
         board_start_x = (WIDTH - BOARD_WIDTH) // 2
-        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 5 # move board up ~ 70 px
+        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70 # move board up ~ 70 px
 
         # Draw the cells
         for row in self.cells:
@@ -73,7 +76,7 @@ class Board:
 
         # Calculate the starting position
         board_start_x = (WIDTH - BOARD_WIDTH) // 2
-        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 -5 # move board up ~ 70 px
+        board_start_y = (HEIGHT - BOARD_HEIGHT) // 2 - 70 # move board up ~ 70 px
 
         # if coordinates inside the board (which calculated by adding board's width and height to the starting points)
         if board_start_x <= x < board_start_x + BOARD_WIDTH and board_start_y <= y < board_start_y + BOARD_HEIGHT:
@@ -91,7 +94,7 @@ class Board:
                     # check if it's an empty cell in the original board
                     if self.board[i][j] == 0:
                         self.cells[i][j].sketched_value = 0
-                        self.cells[i][j].cell_value = 0
+                        self.cells[i][j].value = 0
 
     def sketch(self, value):
         for row in range(self.board_rows):
@@ -130,7 +133,7 @@ class Board:
         self.board = self.original
 
     def is_full(self):
-        self.board = [[0 for _ in range(9)] for _ in range(9)]
+        # self.board = [[0 for _ in range(9)] for _ in range(9)]
         for row in self.board:
             for cell in row:
                 if cell == 0:
