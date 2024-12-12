@@ -1,5 +1,3 @@
-from cell import Cell
-from sudoku_generator import *
 from board import *
 import pygame
 from constants import *
@@ -132,15 +130,6 @@ def draw_other_buttons(screen):
     buttons = [(reset_rectangle, 'RESET'), (restart_rectangle, 'RESTART'), (exit_rectangle, 'EXIT')]
     return buttons
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button ==1:
-                for rect, label in buttons:
-                    if rect.collidepoint(event.pos):
-                        return label
 
 def handle_button_click(event, buttons):
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -202,9 +191,8 @@ def draw_game_over(screen, winner):
 
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
-                return  # Exit this function to restart the main loop
-
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_m:  # Exit this function to restart the main loop
+                main()
 
 def handle_board_events(board, screen):
     for event in pygame.event.get():
@@ -221,6 +209,7 @@ def handle_board_events(board, screen):
     board.draw()
     return True
 
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -230,48 +219,37 @@ def main():
     difficulty = draw_game_start(screen)
     board = Board(WIDTH, HEIGHT, screen, difficulty)
     board = generate_initial_board(51)
+
     screen.fill("white")
     buttons = draw_other_buttons(screen)
 
     running = True
     game_over = False
     while running:
-        # screen.fill('white')
-        # label = draw_other_buttons(screen)
-        #
-        # if label == 'RESET':
-        #     board.reset_to_original()
-        # elif label == 'RESTART':
-        #     board.clear()
-        #     continue
-        # elif label == 'QUIT':
-        #     break
         counter = 0
 
         if difficulty == 30:
-            # new_board = SudokuGenerator(9, 30)
-            # sudoku_list = new_board.get_board()
-            for row in range(0,9):
-                for col in range(0,9):
+            for row in range(0, 9):
+                for col in range(0, 9):
                     entry = board.cells[row][col].value
                     if entry != 0 and counter < 51:
                         board.draw()
-                        counter +=1
+                        counter += 1
         elif difficulty == 40:
-            for row in range(0,9):
-                for col in range(0,9):
+            for row in range(0, 9):
+                for col in range(0, 9):
                     entry = board.cells[row][col].value
                     if entry != 0 and counter < 41:
                         board.draw()
-                        counter +=1
+                        counter += 1
         elif difficulty == 50:
-            for row in range(0,9):
-                for col in range(0,9):
+            for row in range(0, 9):
+                for col in range(0, 9):
                     entry = board.cells[row][col].value
-                    if entry != 0 and counter < 31 :
+                    if entry != 0 and counter < 31:
                         board.draw()
-                        counter +=1
-
+                        counter += 1
+        store_original = board
 
         # Main game loop
         for event in pygame.event.get():
@@ -285,7 +263,7 @@ def main():
                     row, col = clicked_cell
                     board.select(row, col)
                 if other_clicked_cell == "RESET":
-                    board.reset_to_original()
+                    store_original.draw()
                 elif other_clicked_cell == "RESTART":
                     main()
                     return
@@ -332,7 +310,6 @@ def main():
         board.draw()
         pygame.display.flip()
 
-
         if game_over:
             if board.check_board():
                 winner = 1
@@ -344,5 +321,6 @@ def main():
     pygame.quit()
 if __name__ == '__main__':
     main()
+
 
 
