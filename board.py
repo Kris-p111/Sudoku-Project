@@ -59,6 +59,8 @@ class Board:
                              (board_start_x + (3 * i) * CELL_SIZE, board_start_y + BOARD_HEIGHT),
                              BOARD_LINE_WIDTH)
 
+
+
     # Marks the cell at (row, col) in the board as the current selected cell
     def select(self, row, col):
         for i in range(self.board_rows):
@@ -129,8 +131,18 @@ class Board:
         #             self.screen.blit(number_print, (x, y))
 
     def reset_to_original(self):
-        super().__init__()
-        self.board = self.original
+
+        for row in range(self.board_rows):
+            for col in range(self.board_cols):
+                if self.original[row][col] == 0:  # If the cell was empty originally
+                    self.board[row][col] = 0
+
+            # Recreate the cells to reflect the reset
+        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
+                       for col in range(self.board_cols)]
+                      for row in range(self.board_rows)]
+
+        return self.cells
 
     def is_full(self):
         # self.board = [[0 for _ in range(9)] for _ in range(9)]
@@ -141,14 +153,18 @@ class Board:
         return True
 
     def update_board(self):
-        for row in self.board:
-            for col in self.board:
-                font = pygame.font.SysFont('Times New Roman', 50)
-                number_print = font.render(str(self.value), True, 'Black')
-                x = col * 82
-                y = row * 82
-                self.screen.blit(number_print, (x, y))
-        pygame.display.update()
+        # for row in self.board:
+        #     for col in self.board:
+        #         font = pygame.font.SysFont('Times New Roman', 50)
+        #         number_print = font.render(str(self.value), True, 'Black')
+        #         x = col * 82
+        #         y = row * 82
+        #         self.screen.blit(number_print, (x, y))
+        # pygame.display.update()
+        for row in range(self.board_rows):
+            for col in range(self.board_cols):
+                if self.cells[col][row].sketched_value != 0:
+                    self.cells[col][row].value = self.cells[col][row].sketched_value
 
     def find_empty(self):
         # loop through cells and find empty, then return row and col as tuple
@@ -167,7 +183,7 @@ class Board:
             if not valid(self.board[row]):
                 return False
         for col in range(self.board_cols):
-            if not valid(col):
+            if not valid(self.board[col]):
                 return False
         for box_row in range(0, 9, 3):
             for box_col in range(0, 9, 3):

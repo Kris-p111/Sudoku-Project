@@ -1,34 +1,12 @@
+from mimetypes import inited
+
 from board import *
 import pygame
 from constants import *
+from sudoku_generator import *
 import random
+import copy
 
-
-def is_valid_move(board, row, col, num):
-    # Check the row
-    if num in board[row]:
-        return False
-
-    # Check the column
-    if num in [board[i][col] for i in range(9)]:
-        return False
-
-    # Check the 3x3 grid
-    start_row, start_col = 3 * (row // 3), 3 * (col // 3)
-    for i in range(start_row, start_row + 3):
-        for j in range(start_col, start_col + 3):
-            if board[i][j] == num:
-                return False
-
-    return True
-
-def generate_sudoku(size, removed):
-    sudoku = SudokuGenerator(size, removed)
-    sudoku.fill_values()
-    board = sudoku.get_board()
-    sudoku.remove_cells()
-    board = sudoku.get_board()
-    return board
 
 def draw_game_start(screen):
     # Initialize fonts
@@ -73,23 +51,56 @@ def draw_game_start(screen):
                     if rect.collidepoint(event.pos):
                         return value
 
+
 def generate_initial_board(num_cells):
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     initial_board = Board(WIDTH, HEIGHT, screen, difficulty=0)
-    filled_cells = 0
-    while filled_cells < num_cells:
-        row, col = random.randint(0, 8), random.randint(0, 8)
-        if initial_board.board[row][col] == 0:
-            num = random.randint(1, 9)
-            if is_valid_move(initial_board.board, row, col, num):
-                initial_board.select(row, col)
-                initial_board.place_number(num)
-                filled_cells += 1
-    initial_board.draw()  # Ensure the board is drawn completely
-    pygame.display.update()  # Refresh the screen after the loop
-    return initial_board
-#print(board.place_number(board.cells[row][col].sketched_value))
 
+    # Function to check if the number placement is valid
+    def is_valid_move(board, row, col, num):
+        # Check row
+        if num in board[row]:
+            return False
+        # Check column
+        for r in range(9):
+            if board[r][col] == num:
+                return False
+        # Check 3x3 grid
+        start_row, start_col = 3 * (row // 3), 3 * (col // 3)
+        for i in range(start_row, start_row + 3):
+            for j in range(start_col, start_col + 3):
+                if board[i][j] == num:
+                    return False
+        return True
+    def fill_board():
+        for row in range(9):
+            for col in range(9):
+                if initial_board.board[row][col] == 0:
+                    numbers = list(range(1, 10))
+                    random.shuffle(numbers)
+                    for num in numbers:
+                        if is_valid_move(initial_board.board, row, col, num):
+                            initial_board.board[row][col] = num
+                            initial_board.cells[row][col].set_cell_value(num)
+                            if fill_board():
+                                return True
+                            initial_board.board[row][col] = 0
+                            initial_board.cells[row][col].set_cell_value(0)
+                    return False
+        return True
+    fill_board()
+    filled_cells = 81 - num_cells
+    cells_to_remove = 81 - filled_cells
+    while cells_to_remove > 0:
+        row, col = random.randint(0, 8), random.randint(0, 8)
+        if initial_board.board[row][col] != 0:
+            initial_board.board[row][col] = 0
+            initial_board.cells[row][col].set_cell_value(0)
+            cells_to_remove -= 1
+    initial_board.draw()
+    pygame.display.flip()
+
+    return initial_board
 
 
 def draw_other_buttons(screen):
@@ -218,8 +229,15 @@ def main():
 
     # Select difficulty and generate the board
     difficulty = draw_game_start(screen)
-    board = Board(WIDTH, HEIGHT, screen, difficulty)
-    board = generate_initial_board(51)
+    board = generate_initial_board(difficulty)
+    board.original = copy.deepcopy(board.board)
+    print("Initial Board (self.board):")
+    for row in board.board:
+        print(row)
+
+    print("Original Board (self.original):")
+    for row in board.original:
+        print(row)
     screen.fill("white")
     buttons = draw_other_buttons(screen)
 
@@ -260,7 +278,6 @@ def main():
                         if entry != 0 and counter < 31 :
                             board.draw()
                             counter +=1
-            store_original = board
 
             # Main game loop
             for event in pygame.event.get():
@@ -274,18 +291,12 @@ def main():
                         row, col = clicked_cell
                         board.select(row, col)
                     if other_clicked_cell == "RESET":
-                        print("RESET button clicked")
-
-                        # Debugging: Board state before resetting
-                        print("Board Before Reset:")
-                        for row in store_original.board:
-                            print(row)
-
-                        # Reset the board to its original state (from store_original)
-                        board = store_original  # Restore the original board
-
-                        board.draw()  # Redraw the board to reflect the reset state
-                        pygame.display.flip()  # Update the display
+                        print("Board before Reset")
+                        for r in board.board:
+                            print(r)
+                        board.reset_to_original()
+                        board.draw()
+                        pygame.display.flip()
 
                         # Debugging: Board state after resetting
                         print("Board After Reset:")
@@ -341,5 +352,6 @@ def main():
     pygame.quit()
 if __name__ == '__main__':
     main()
+
 
 
