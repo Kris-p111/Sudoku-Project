@@ -214,6 +214,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")
+    selected_row, selected_col = 0, 0
 
     # Select difficulty and generate the board
     difficulty = draw_game_start(screen)
@@ -297,7 +298,6 @@ def main():
                         running = False
 
                 elif event.type == pygame.KEYDOWN:
-                        selected_row, selected_col = 0, 0
                         if pygame.K_1 <= event.key <= pygame.K_9:
                             board.sketch(event.key - pygame.K_0)
                         elif event.key == pygame.K_RETURN:
