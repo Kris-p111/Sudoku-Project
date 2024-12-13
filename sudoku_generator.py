@@ -124,8 +124,8 @@ Return: list[list] (a 2D Python list to represent the board)
 '''
 
 
-def generate_sudoku(size, removed):
-    sudoku = SudokuGenerator(size, removed)
+def generate_sudoku(row_length, removed_cells):
+    sudoku = SudokuGenerator(row_length, removed_cells)
     sudoku.fill_values()
     board = sudoku.get_board()
     sudoku.remove_cells()

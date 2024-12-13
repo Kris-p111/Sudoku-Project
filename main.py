@@ -2,6 +2,7 @@ from board import *
 import pygame
 from constants import *
 import random
+import copy
 
 def is_valid_move(board, row, col, num):
     # Check the row
@@ -21,13 +22,13 @@ def is_valid_move(board, row, col, num):
 
     return True
 
-def generate_sudoku(size, removed):
-    sudoku = SudokuGenerator(size, removed)
-    sudoku.fill_values()
-    board = sudoku.get_board()
-    sudoku.remove_cells()
-    board = sudoku.get_board()
-    return board
+# def generate_sudoku(size, removed):
+#     sudoku = SudokuGenerator(size, removed)
+#     sudoku.fill_values()
+#     board = sudoku.get_board()
+#     sudoku.remove_cells()
+#     board = sudoku.get_board()
+#     return board
 
 def draw_game_start(screen):
     # Initialize fonts
@@ -210,16 +211,17 @@ def handle_board_events(board, screen):
     return True
 
 
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")
 
     # Select difficulty and generate the board
+    # board = Board(WIDTH, HEIGHT, screen, difficulty)
     difficulty = draw_game_start(screen)
-    board = Board(WIDTH, HEIGHT, screen, difficulty)
-    board = generate_initial_board(51)
-    board.original = board.board
+    board = generate_initial_board(81-difficulty)
+    board.original = copy.deepcopy(board.board)
     print("Initial Board (self.board):")
     for row in board.board:
         print(row)
@@ -270,13 +272,9 @@ def main():
                     row, col = clicked_cell
                     board.select(row, col)
                 if other_clicked_cell == "RESET":
-                    print("RESET button clicked")
-
-                    # Debugging: Board state before resetting
-                    print("Board Before Reset:")
-                    for row in board.board:
-                        print(row)
-
+                    print("Board before Reset")
+                    for r in board.board:
+                        print(r)
                     board.reset_to_original()
                     board.draw()
                     pygame.display.flip()
