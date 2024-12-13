@@ -3,6 +3,7 @@ import pygame
 from constants import *
 import random
 
+
 def is_valid_move(board, row, col, num):
     # Check the row
     if num in board[row]:
@@ -209,7 +210,6 @@ def handle_board_events(board, screen):
     board.draw()
     return True
 
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -219,7 +219,6 @@ def main():
     difficulty = draw_game_start(screen)
     board = Board(WIDTH, HEIGHT, screen, difficulty)
     board = generate_initial_board(51)
-
     screen.fill("white")
     buttons = draw_other_buttons(screen)
 
@@ -228,88 +227,6 @@ def main():
     while running:
         counter = 0
 
-        if difficulty == 30:
-            for row in range(0, 9):
-                for col in range(0, 9):
-                    entry = board.cells[row][col].value
-                    if entry != 0 and counter < 51:
-                        board.draw()
-                        counter += 1
-        elif difficulty == 40:
-            for row in range(0, 9):
-                for col in range(0, 9):
-                    entry = board.cells[row][col].value
-                    if entry != 0 and counter < 41:
-                        board.draw()
-                        counter += 1
-        elif difficulty == 50:
-            for row in range(0, 9):
-                for col in range(0, 9):
-                    entry = board.cells[row][col].value
-                    if entry != 0 and counter < 31:
-                        board.draw()
-                        counter += 1
-        store_original = board
-
-        # Main game loop
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                pos = pygame.mouse.get_pos()
-                clicked_cell = board.click(*pos)
-                other_clicked_cell = handle_button_click(event, buttons)
-                if clicked_cell:
-                    row, col = clicked_cell
-                    board.select(row, col)
-                if other_clicked_cell == "RESET":
-                    store_original.draw()
-                elif other_clicked_cell == "RESTART":
-                    main()
-                    return
-                elif other_clicked_cell == "EXIT":
-                    running = False
-
-            elif event.type == pygame.KEYDOWN:
-                selected_row, selected_col = 0, 0
-                if pygame.K_1 <= event.key <= pygame.K_9:
-                    board.sketch(event.key - pygame.K_0)
-                elif event.key == pygame.K_RETURN:
-                    for row in range(board.board_rows):
-                        for col in range(board.board_cols):
-                            if board.cells[row][col].selected:
-                                if board.cells[row][col].sketched_value != 0:
-                                    board.place_number(board.cells[row][col].sketched_value)
-
-                elif event.key == pygame.K_LEFT:
-                    new_col = selected_col - 1
-                    if new_col < 0:
-                        new_col = 8
-                    board.select(selected_row, new_col)
-                    selected_col = new_col
-                elif event.key == pygame.K_RIGHT:
-                    new_col = selected_col + 1
-                    if new_col > 8:
-                        new_col = 0
-                    board.select(selected_row, new_col)
-                    selected_col = new_col
-                elif event.key == pygame.K_UP:
-                    new_row = selected_row - 1
-                    if new_row < 0:
-                        new_row = 8
-                    board.select(new_row, selected_col)
-                    selected_row = new_row
-                elif event.key == pygame.K_DOWN:
-                    new_row = selected_row + 1
-                    if new_row > 8:
-                        new_row = 0
-                    board.select(new_row, selected_col)
-                    selected_row = new_row
-                elif event.key == pygame.K_RETURN and board.is_full():
-                    game_over = True
-        board.draw()
-        pygame.display.flip()
-
         if game_over:
             if board.check_board():
                 winner = 1
@@ -317,10 +234,112 @@ def main():
                 winner = 0
             pygame.display.update()
             draw_game_over(screen, winner)
+            pygame.display.flip()
             running = False
+
+        if not game_over:
+            if difficulty == 30:
+                for row in range(0,9):
+                    for col in range(0,9):
+                        entry = board.cells[row][col].value
+                        if entry != 0 and counter < 51:
+                            board.draw()
+                            counter +=1
+            elif difficulty == 40:
+                for row in range(0,9):
+                    for col in range(0,9):
+                        entry = board.cells[row][col].value
+                        if entry != 0 and counter < 41:
+                            board.draw()
+                            counter +=1
+            elif difficulty == 50:
+                for row in range(0,9):
+                    for col in range(0,9):
+                        entry = board.cells[row][col].value
+                        if entry != 0 and counter < 31 :
+                            board.draw()
+                            counter +=1
+            store_original = board
+
+            # Main game loop
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    clicked_cell = board.click(*pos)
+                    other_clicked_cell = handle_button_click(event, buttons)
+                    if clicked_cell:
+                        row, col = clicked_cell
+                        board.select(row, col)
+                    if other_clicked_cell == "RESET":
+                        print("RESET button clicked")
+
+                        # Debugging: Board state before resetting
+                        print("Board Before Reset:")
+                        for row in store_original.board:
+                            print(row)
+
+                        # Reset the board to its original state (from store_original)
+                        board = store_original  # Restore the original board
+
+                        board.draw()  # Redraw the board to reflect the reset state
+                        pygame.display.flip()  # Update the display
+
+                        # Debugging: Board state after resetting
+                        print("Board After Reset:")
+                        for row in board.board:
+                            print(row)
+                    elif other_clicked_cell == "RESTART":
+                        main()
+                        return
+                    elif other_clicked_cell == "EXIT":
+                        running = False
+
+                elif event.type == pygame.KEYDOWN:
+                        selected_row, selected_col = 0, 0
+                        if pygame.K_1 <= event.key <= pygame.K_9:
+                            board.sketch(event.key - pygame.K_0)
+                        elif event.key == pygame.K_RETURN:
+                            for row in range(board.board_rows):
+                                for col in range(board.board_cols):
+                                    if board.cells[row][col].selected:
+                                        if board.cells[row][col].sketched_value != 0:
+                                            board.place_number(board.cells[row][col].sketched_value)
+                            if board.is_full():
+                                game_over = True
+
+                        elif event.key == pygame.K_LEFT:
+                            new_col = selected_col - 1
+                            if new_col < 0:
+                                new_col = 8
+                            board.select(selected_row, new_col)
+                            selected_col = new_col
+                        elif event.key == pygame.K_RIGHT:
+                            new_col = selected_col + 1
+                            if new_col > 8:
+                                new_col = 0
+                            board.select(selected_row, new_col)
+                            selected_col = new_col
+                        elif event.key == pygame.K_UP:
+                            new_row = selected_row - 1
+                            if new_row < 0:
+                                new_row = 8
+                            board.select(new_row, selected_col)
+                            selected_row = new_row
+                        elif event.key == pygame.K_DOWN:
+                            new_row = selected_row + 1
+                            if new_row > 8:
+                                new_row = 0
+                            board.select(new_row, selected_col)
+                            selected_row = new_row
+                        elif event.key == pygame.K_RETURN and board.is_full():
+                            game_over = True
+
+            board.draw()
+            pygame.display.flip()
     pygame.quit()
 if __name__ == '__main__':
     main()
-
 
 

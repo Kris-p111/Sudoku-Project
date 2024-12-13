@@ -129,6 +129,7 @@ class Board:
         #             self.screen.blit(number_print, (x, y))
 
     def reset_to_original(self):
+        super().__init__()
         self.board = self.original
 
     def is_full(self):
@@ -140,18 +141,14 @@ class Board:
         return True
 
     def update_board(self):
-        # for row in self.board:
-        #     for col in self.board:
-        #         font = pygame.font.SysFont('Times New Roman', 50)
-        #         number_print = font.render(str(self.value), True, 'Black')
-        #         x = col * 82
-        #         y = row * 82
-        #         self.screen.blit(number_print, (x, y))
-        # pygame.display.update()
-        for row in range(self.board_rows):
-            for col in range(self.board_cols):
-                if self.cells[col][row].sketched_value != 0:
-                    self.cells[col][row].value = self.cells[col][row].sketched_value
+        for row in self.board:
+            for col in self.board:
+                font = pygame.font.SysFont('Times New Roman', 50)
+                number_print = font.render(str(self.value), True, 'Black')
+                x = col * 82
+                y = row * 82
+                self.screen.blit(number_print, (x, y))
+        pygame.display.update()
 
     def find_empty(self):
         # loop through cells and find empty, then return row and col as tuple
