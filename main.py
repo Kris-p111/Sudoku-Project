@@ -219,7 +219,14 @@ def main():
     difficulty = draw_game_start(screen)
     board = Board(WIDTH, HEIGHT, screen, difficulty)
     board = generate_initial_board(51)
+    board.original = board.board
+    print("Initial Board (self.board):")
+    for row in board.board:
+        print(row)
 
+    print("Original Board (self.original):")
+    for row in board.original:
+        print(row)
     screen.fill("white")
     buttons = draw_other_buttons(screen)
 
@@ -249,7 +256,7 @@ def main():
                     if entry != 0 and counter < 31:
                         board.draw()
                         counter += 1
-        store_original = board
+        # store_original = board
 
         # Main game loop
         for event in pygame.event.get():
@@ -263,7 +270,22 @@ def main():
                     row, col = clicked_cell
                     board.select(row, col)
                 if other_clicked_cell == "RESET":
-                    store_original.draw()
+                    print("RESET button clicked")
+
+                    # Debugging: Board state before resetting
+                    print("Board Before Reset:")
+                    for row in board.board:
+                        print(row)
+
+                    board.reset_to_original()
+                    board.draw()
+                    pygame.display.flip()
+
+                    # Debugging: Board state after resetting
+                    print("Board After Reset:")
+                    for row in board.board:
+                        print(row)
+                    # store_original.draw()
                 elif other_clicked_cell == "RESTART":
                     main()
                     return

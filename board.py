@@ -130,7 +130,15 @@ class Board:
         #             self.screen.blit(number_print, (x, y))
 
     def reset_to_original(self):
-        self.board = self.original
+        for row in range(self.board_rows):
+            for col in range(self.board_cols):
+                if self.original[row][col] == 0:  # If the cell was empty originally
+                    self.board[row][col] = 0
+
+            # Recreate the cells to reflect the reset
+        self.cells = [[Cell(self.board[row][col], row, col, self.screen)
+                       for col in range(self.board_cols)]
+                      for row in range(self.board_rows)]
 
     def is_full(self):
         # self.board = [[0 for _ in range(9)] for _ in range(9)]

@@ -16,7 +16,10 @@ class SudokuGenerator:
                            if cell != 0 else "0" for cell in row))
 
     def valid_in_row(self, row, num):
-        return num not in self.board[row]
+        for i in range(self.row_length):
+            if self.board[i] == num:
+                return False
+        return True
 
     def valid_in_col(self, col, num):
         for row in range(self.row_length):
